@@ -30,14 +30,14 @@ int main(int argc, char* argv[]) {
 	
 	if (ret != 0) {
 		printf("WSAStartup() failed!\n");
-		return -1;
+		return -2;
 	}
 
 	// ensure that support WinSock DLL version 2.2
 	if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2) {
 		WSACleanup();
 		printf("Invalid Winsock version!\n");
-		return -1;
+		return -3;
 	}
 
 	// create socket using TCP protocol 
@@ -45,9 +45,13 @@ int main(int argc, char* argv[]) {
 	if (sClient == INVALID_SOCKET) {
 		WSACleanup();
 		printf("socket() failed!\n");
-		return -1;
+		return -4;
 
 	}
+
+	saServer.sin_family = AF_INET;
+	saServer.sin_port = htons(SERVER_PORT);
+	saServer.sin_addr.S_un.S_addr = inet_addr(argv[1]);
 
 	// construct server address information
 	ret = connect(sClient, (struct sockaddr*)&saServer, sizeof(saServer));
@@ -56,7 +60,7 @@ int main(int argc, char* argv[]) {
 		printf("connect() failed!\n");
 		closesocket(sClient);
 		WSACleanup();
-		return -1;
+		return -5;
 	}
 
 	strcpy(stu.name, argv[2]);
@@ -72,5 +76,6 @@ int main(int argc, char* argv[]) {
 	closesocket(sClient);
 	WSACleanup();
 
+	system("pause");
 	return 0;
 }
