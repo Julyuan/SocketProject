@@ -38,11 +38,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
 	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = "CHAT";
+	wcex.lpszClassName = (LPCWSTR)"CHAT";
 	wcex.hIconSm = NULL;
 	RegisterClassEx(&wcex);
 	//创建程序主窗口
-	hWnd = CreateWindow("CHAT", "Chat",
+	hWnd = CreateWindow((LPCWSTR)"CHAT", (LPCWSTR)"Chat",
 		WS_OVERLAPPEDWINDOW &~WS_MAXIMIZEBOX &~WS_THICKFRAME, 200, 200, 505, 410, NULL, NULL, hInstance, NULL);
 	if (!hWnd)
 	{
@@ -87,7 +87,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_CREATE:
 		//如果是主窗口创建的消息就初始化各控件
-		LoadLibrary("RICHED20.DLL");
+		LoadLibrary((LPCWSTR)"RICHED20.DLL");
 		//输出聊天内容的控件
 		hOWnd = CreateWindowEx(WS_EX_CLIENTEDGE, RICHEDIT_CLASS, NULL,
 			WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_LEFT |
@@ -99,23 +99,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY,
 			10, 270, 350, 100, hWnd, NULL, hInst, NULL);
 		//输入IP的控件
-		hIPEdit = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "127.0.0.1",
+		hIPEdit = CreateWindowEx(WS_EX_CLIENTEDGE, (LPCWSTR)"EDIT", (LPCWSTR)"127.0.0.1",
 			WS_CHILD | WS_VISIBLE | ES_LEFT |
 			ES_AUTOHSCROLL,
 			370, 10, 120, 25, hWnd, (HMENU)ID_IPEDIT,
 			hInst, NULL);
 		//输入端口号的控件
-		hPortEdit = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "8888",
+		hPortEdit = CreateWindowEx(WS_EX_CLIENTEDGE, (LPCWSTR)"EDIT", (LPCWSTR)"8888",
 			WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER,
 			370, 45, 50, 25, hWnd, (HMENU)ID_PORTEDIT,
 			hInst, NULL);
 		//连接按钮
-		hConnBtn = CreateWindowEx(0, "BUTTON", "Connect",
+		hConnBtn = CreateWindowEx(0, (LPCWSTR)"BUTTON", (LPCWSTR)"Connect",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON |
 			BS_DEFPUSHBUTTON, 370, 80, 100, 25, hWnd,
 			(HMENU)ID_CONNBTN, hInst, NULL);
 		//侦听按钮
-		hListenBtn = CreateWindowEx(0, "BUTTON", "Listen",
+		hListenBtn = CreateWindowEx(0, (LPCWSTR)"BUTTON", (LPCWSTR)"Listen",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON |
 			BS_DEFPUSHBUTTON, 370, 115, 100, 25, hWnd,
 			(HMENU)ID_LISTENBTN, hInst, NULL);
@@ -124,7 +124,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		lf.lfCharSet = DEFAULT_CHARSET;
 		lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 		lf.lfEscapement = 0;
-		strcpy(lf.lfFaceName, "Verdana");
+		strcpy((char*)lf.lfFaceName, "Verdana");
 		lf.lfHeight = 15;
 		lf.lfItalic = FALSE;
 		lf.lfOrientation = 0;
@@ -259,6 +259,6 @@ void PrintLastError()
 		(LPTSTR)&lpMsgBuf,
 		0,
 		NULL);
-	MessageBox(NULL, (LPCTSTR)lpMsgBuf, "Error", MB_OK | MB_ICONINFORMATION);
+	MessageBox(NULL, (LPCTSTR)lpMsgBuf, (LPCWSTR)"Error", MB_OK | MB_ICONINFORMATION);
 	LocalFree(lpMsgBuf);
 }

@@ -24,12 +24,18 @@
     <ClCompile Include="chat.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="supersocketServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="supersocketClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="net.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="net.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

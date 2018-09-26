@@ -149,6 +149,8 @@
     <ClCompile Include="chat.cpp" />
     <ClCompile Include="informWinClient.cpp" />
     <ClCompile Include="informWInServer.cpp" />
+    <ClCompile Include="supersocketClient.cpp" />
+    <ClCompile Include="supersocketServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="net.h" />
