@@ -5,9 +5,10 @@
 /*
 * 构造函数
 */
-CClient::CClient(const SOCKET sClient, const sockaddr_in &addrClient, superServer* super)
+CClient::CClient(const SOCKET sClient, const sockaddr_in &addrClient, superServer* super, int ID)
 {
 	//初始化变量
+	m_iID = ID;
 	m_hThreadRecv = NULL;
 	m_hThreadSend = NULL;
 	m_socket = sClient;
@@ -253,8 +254,7 @@ void CClient::HandleData(const char* pExpr)
 		PACKAGE temp;
 
 		for (auto iter: this->Super->clientlist) {
-			ULONG
-			iter->m_addr.sin_addr.S_un.S_addr;
+			u_long ulIPNum = iter->m_addr.sin_addr.S_un.S_addr;
 			int iPortNum = iter->m_addr.sin_port;
 			count++;
 			temp.head.type = LIST;
@@ -262,9 +262,31 @@ void CClient::HandleData(const char* pExpr)
 			char caIP[4];
 			char cID;
 			char caPort[2];
-			char cLeft;
-			
+			char cLeft = 0;
+			char* buffer;
+			int a[4];
+			buffer = inet_ntoa(iter->m_addr.sin_addr);
+			sscanf(buffer, "%d.%d.%d.%d", &a[0], &a[1], &a[2], &a[3]);
+			memset(temp.data.buf, 0, sizeof(temp.data.buf));
+			for(int i=0;i<4;i++)
+				caIP[i] = (char)a[i];
+			caPort[0] = iPortNum % 256;
+			iPortNum /= 256;
+			caPort[1] = iPortNum;
+			cID = iter->m_iID;
+			if (count == 1) {
+				temp.head.type = LIST;
 
+				memcpy(temp.data.buf + 2, &cID,1);
+				memcpy(temp.data.buf + 3, caIP, 4);
+				memcpy(temp.data.buf + 7, caPort, 2);
+				memcpy(temp.data.buf + 9, &cLeft, 1);
+			}
+			else {
+				memcpy(temp.data.buf + 2 + 10*count, caIP, 4);
+				memcpy(temp.data.buf + 6 + 10 * count, caPort, 2);
+				memcpy(temp.data.buf + 8 + 10 * count, &cLeft, 1);
+			}
 			if (count == 4) {
 				count = 0;
 				pac.push_back(temp);

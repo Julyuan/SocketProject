@@ -20,6 +20,7 @@
 #define NAME				'N'				//获取名字
 #define LIST				'L'				//获取客户端列表
 #define SEND				'S'				//向其他客户端发送消息
+#define COMMUNICATION		'C'				//客户端之间通讯
 #define HEADERLEN			(sizeof(hdr))	//头长度
 
 //数据包头结构，该结构在win32下为4byte
@@ -44,10 +45,14 @@ class superServer;
 class CClient
 {
 public:
-	CClient(const SOCKET sClient, const sockaddr_in &addrClient, superServer* super);
+	CClient(const SOCKET sClient, const sockaddr_in &addrClient, superServer* super, int ID);
 	virtual ~CClient();
 
 public:
+	DATABUF		m_data;				//数据
+	CRITICAL_SECTION m_cs;			//临界区对象
+	HANDLE		m_hEvent;			//事件对象
+
 	superServer* Super;
 	BOOL IntToChar(int total, int index, char* des);
 	std::vector<PACKAGE> DataConvert(char* str, int type);
@@ -69,14 +74,13 @@ public:
 
 private:
 	CClient();
+
 private:
 	SOCKET		m_socket;			//套接字
 	sockaddr_in	m_addr;				//地址
-	DATABUF		m_data;				//数据
-	HANDLE		m_hEvent;			//事件对象
 	HANDLE		m_hThreadSend;		//发送数据线程句柄
 	HANDLE		m_hThreadRecv;		//接收数据线程句柄
-	CRITICAL_SECTION m_cs;			//临界区对象
 	BOOL		m_bConning;			//客户端连接状态
 	BOOL		m_bExit;			//线程退出
+	int			m_iID;
 };

@@ -17,8 +17,8 @@
 typedef std::list <CClient*> CLIENTLIST;			//链表
 
 struct Message {
-	int IAddress;
-	_data data;
+	int iDesID;
+	PACKAGE pData;
 };
 
 class superServer {
@@ -31,6 +31,8 @@ public:
 	static HANDLE	hServerEvent;						//关闭服务器事件对象
 	static CLIENTLIST clientlist;				//管理连接的链表
 	static CRITICAL_SECTION	csClientList;			//保护链表的临界区对象
+	static CRITICAL_SECTION csMessageQueue;
+	static CRITICAL_SECTION csClientTable;
 	static std::map<int, CClient*>mClientTable;
 	static int iCount;
 	BOOL	InitSever(void);					//初始化
