@@ -1,27 +1,14 @@
-﻿  chat.cpp
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\net.h(133): error C2664: “int send(SOCKET,const char *,int,int)”: 无法将参数 2 从“TCHAR *”转换为“const char *”
-  c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\net.h(133): note: 与指向的类型无关；转换要求 reinterpret_cast、C 样式转换或函数样式转换
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(41): error C2440: “=”: 无法从“const char [5]”转换为“LPCWSTR”
-  c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(41): note: 与指向的类型无关；转换要求 reinterpret_cast、C 样式转换或函数样式转换
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(46): error C2664: “HWND CreateWindowExW(DWORD,LPCWSTR,LPCWSTR,DWORD,int,int,int,int,HWND,HMENU,HINSTANCE,LPVOID)”: 无法将参数 2 从“const char [5]”转换为“LPCWSTR”
-  c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(46): note: 与指向的类型无关；转换要求 reinterpret_cast、C 样式转换或函数样式转换
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(90): error C2664: “HMODULE LoadLibraryW(LPCWSTR)”: 无法将参数 1 从“const char [13]”转换为“LPCWSTR”
-  c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(90): note: 与指向的类型无关；转换要求 reinterpret_cast、C 样式转换或函数样式转换
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(105): error C2065: “ID_IPEDIT”: 未声明的标识符
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(110): error C2065: “ID_PORTEDIT”: 未声明的标识符
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(116): error C2065: “ID_CONNBTN”: 未声明的标识符
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(121): error C2065: “ID_LISTENBTN”: 未声明的标识符
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(127): error C2664: “char *strcpy(char *,const char *)”: 无法将参数 1 从“WCHAR [32]”转换为“char *”
-  c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(127): note: 与指向的类型无关；转换要求 reinterpret_cast、C 样式转换或函数样式转换
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(156): error C2065: “ID_CONNBTN”: 未声明的标识符
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(156): error C2131: 表达式的计算结果不是常数
-  c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(156): note: 非常量参数或对非常量符号的引用导致了故障
-  c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(156): note: 请参见“ID_CONNBTN”的用法
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(185): error C2065: “ID_LISTENBTN”: 未声明的标识符
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(185): error C2131: 表达式的计算结果不是常数
-  c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(185): note: 非常量参数或对非常量符号的引用导致了故障
-  c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(185): note: 请参见“ID_LISTENBTN”的用法
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(156): error C2051: case 表达式不是常量
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(185): error C2051: case 表达式不是常量
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(262): error C2664: “int MessageBoxW(HWND,LPCWSTR,LPCWSTR,UINT)”: 无法将参数 3 从“const char [6]”转换为“LPCWSTR”
-  c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\chat.cpp(262): note: 与指向的类型无关；转换要求 reinterpret_cast、C 样式转换或函数样式转换
+﻿  superServer.cpp
+  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+  superClient.cpp
+c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(203): warning C4267: “=”: 从“size_t”转换到“unsigned short”，可能丢失数据
+c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(275): warning C4477: “sprintf”: 格式字符串“%s”需要类型“char *”的参数，但可变参数 1 拥有了类型“DATABUF”
+c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(261): warning C4101: “caPort”: 未引用的局部变量
+c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(260): warning C4101: “cID”: 未引用的局部变量
+c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(262): warning C4101: “cLeft”: 未引用的局部变量
+c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(259): warning C4101: “caIP”: 未引用的局部变量
+  正在生成代码...
+c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superserver.cpp(282): error C4716: “superServer::DistributeMessageThread”: 必须返回一个值
+  正在编译...
+  main.cpp
+  正在生成代码...

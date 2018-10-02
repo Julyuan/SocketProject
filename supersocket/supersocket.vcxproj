@@ -30,6 +30,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -37,6 +38,7 @@
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -146,15 +148,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="chat.cpp" />
-    <ClCompile Include="informWinClient.cpp" />
-    <ClCompile Include="informWInServer.cpp" />
-    <ClCompile Include="supersocketClient.cpp" />
-    <ClCompile Include="supersocketServer.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="superClient.cpp" />
+    <ClCompile Include="superServer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="net.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="superClient.h" />
+    <ClInclude Include="superServer.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="supersocket.rc" />

@@ -15,19 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="informWInServer.cpp">
+    <ClCompile Include="superServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="informWinClient.cpp">
+    <ClCompile Include="superClient.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="chat.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="supersocketServer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="supersocketClient.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +29,10 @@
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="net.h">
+    <ClInclude Include="superServer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="superClient.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
