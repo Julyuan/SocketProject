@@ -18,7 +18,7 @@ typedef std::list <CClient*> CLIENTLIST;			//Á´±í
 
 struct Message {
 	int iDesID;
-	PACKAGE pData;
+	DATABUF pData;
 };
 
 class superServer {

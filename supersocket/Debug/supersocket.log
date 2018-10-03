@@ -1,14 +1,8 @@
 ﻿  superServer.cpp
   _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
   superClient.cpp
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(203): warning C4267: “=”: 从“size_t”转换到“unsigned short”，可能丢失数据
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(275): warning C4477: “sprintf”: 格式字符串“%s”需要类型“char *”的参数，但可变参数 1 拥有了类型“DATABUF”
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(261): warning C4101: “caPort”: 未引用的局部变量
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(260): warning C4101: “cID”: 未引用的局部变量
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(262): warning C4101: “cLeft”: 未引用的局部变量
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(259): warning C4101: “caIP”: 未引用的局部变量
+c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(209): warning C4267: “=”: 从“size_t”转换到“unsigned short”，可能丢失数据
+c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(300): warning C4267: “=”: 从“size_t”转换到“char”，可能丢失数据
   正在生成代码...
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superserver.cpp(282): error C4716: “superServer::DistributeMessageThread”: 必须返回一个值
-  正在编译...
-  main.cpp
-  正在生成代码...
+  supersocket.vcxproj -> C:\Users\Jin Lianyuan\documents\visual studio 2015\Projects\supersocket\Debug\supersocket.exe
+  supersocket.vcxproj -> C:\Users\Jin Lianyuan\documents\visual studio 2015\Projects\supersocket\Debug\supersocket.pdb (Full PDB)

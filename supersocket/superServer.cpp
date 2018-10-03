@@ -24,8 +24,14 @@ SOCKET superServer::sServer = INVALID_SOCKET;								//设置为无效的套接字
 BOOL superServer::bServerRunning = FALSE;									//服务器为没有运行状态
 CLIENTLIST superServer::clientlist;
 CRITICAL_SECTION superServer::csClientList;
+std::queue<Message> superServer::MessageQueue;
+
 int superServer::iCount = 0;
 
+std::map<int, CClient*> superServer::mClientTable;
+
+CRITICAL_SECTION superServer::csMessageQueue;
+CRITICAL_SECTION superServer::csClientTable;
 
 /**
 * 初始化
@@ -283,19 +289,20 @@ DWORD WINAPI superServer::DistributeMessageThread(LPVOID pParam) {
 	superServer* pServer = (superServer*)pParam;
 	for (; bServerRunning;) {
 		while (!pServer->MessageQueue.empty()) {
+			EnterCriticalSection(&csMessageQueue);
 			Message temp = pServer->MessageQueue.front();
 			pServer->MessageQueue.pop();
 			CClient*des = pServer->mClientTable[temp.iDesID];
 			EnterCriticalSection(&des->m_cs);
-			phdr pHeaderSend = (phdr)des->m_data.buf;				//发送的数据		
-			pHeaderSend->type = temp.pData.head.type;				//单词类型
-			pHeaderSend->len = temp.pData.head.len;		//数据包长度
-			memcpy(des->m_data.buf + HEADERLEN, &temp.pData.data, pHeaderSend->len-HEADERLEN);	//复制数据到m_data"
+			phdr pHeaderSend = (phdr)temp.pData.buf;				//发送的数据		
+			
+			memcpy(des->m_data.buf, &temp.pData.buf, pHeaderSend->len + 6);	//复制数据到m_data"
 			LeaveCriticalSection(&des->m_cs);
 			SetEvent(des->m_hEvent);	//通知发送数据线程
+			LeaveCriticalSection(&csMessageQueue);
+
+			Sleep(TIMEFOR_THREAD_SLEEP);
 		}
-
-
 	}
 	return 0;
 }

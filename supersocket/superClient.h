@@ -36,11 +36,6 @@ typedef struct _data
 	char	buf[MAX_NUM_BUF];//数据
 }DATABUF, *pDataBuf;
 
-typedef struct _package {
-	hdr head;
-	DATABUF data;
-}PACKAGE, *pPackage;
-
 class superServer;
 class CClient
 {
@@ -52,12 +47,20 @@ public:
 	DATABUF		m_data;				//数据
 	CRITICAL_SECTION m_cs;			//临界区对象
 	HANDLE		m_hEvent;			//事件对象
-
+	
 	superServer* Super;
 	BOOL IntToChar(int total, int index, char* des);
-	std::vector<PACKAGE> DataConvert(char* str, int type);
+	BOOL ImformationEncapsulation(char* caTerm, char* cID, char* caIP, char* caPort) {
+		memcpy(caTerm, cID,1);
+		memcpy(caTerm + 1, caIP, 4);
+		memcpy(caTerm + 5, caPort, 2);
+		return TRUE;
+	}
+	std::vector<DATABUF> DataConvert(char* str, int type);
 	BOOL		StartRuning(void);					//创建发送和接收数据线程
 	void		HandleData(const char* pExpr);		//计算表达式
+
+	void		OutputPackageInBinary(const char* src, int len);
 	BOOL		IsConning(void) {					//是否连接存在
 		return m_bConning;
 	}
