@@ -305,6 +305,7 @@ DWORD WINAPI superServer::DistributeMessageThread(LPVOID pParam) {
 				std::cout << "该ID不存在" << std::endl;
 			}
 			else {
+				std::cout << "开始转运数据" << std::endl;
 				CClient*des = pServer->mClientTable[temp.iDesID];
 
 				EnterCriticalSection(&(des->m_cs));

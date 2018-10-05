@@ -325,6 +325,7 @@ void CClient::HandleData(const char* pExpr)
 		std::cout << "½ÓÊÕµ½send" << std::endl;
 		OutputPackageInBinary(pExpr, pHeaderSend->len + 6);
 		res.iDesID = pExpr[6];
+		res.pData.buf[6] = this->m_iID;
 
 		EnterCriticalSection(&(this->Super->csMessageQueue));
 		this->Super->MessageQueue.push(res);

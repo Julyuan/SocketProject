@@ -1,4 +1,5 @@
-﻿  superClient.cpp
+﻿cl : 命令行 warning D9028: 最小重新生成失败，正在转换为标准生成
+  superClient.cpp
 c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(210): warning C4267: “=”: 从“size_t”转换到“unsigned short”，可能丢失数据
 c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(300): warning C4267: “=”: 从“size_t”转换到“char”，可能丢失数据
   supersocket.vcxproj -> C:\Users\Jin Lianyuan\documents\visual studio 2015\Projects\supersocket\Debug\supersocket.exe
