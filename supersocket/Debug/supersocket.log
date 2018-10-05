@@ -1,8 +1,5 @@
-﻿  superServer.cpp
-  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
-  superClient.cpp
-c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(209): warning C4267: “=”: 从“size_t”转换到“unsigned short”，可能丢失数据
+﻿  superClient.cpp
+c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(210): warning C4267: “=”: 从“size_t”转换到“unsigned short”，可能丢失数据
 c:\users\jin lianyuan\documents\visual studio 2015\projects\supersocket\supersocket\superclient.cpp(300): warning C4267: “=”: 从“size_t”转换到“char”，可能丢失数据
-  正在生成代码...
   supersocket.vcxproj -> C:\Users\Jin Lianyuan\documents\visual studio 2015\Projects\supersocket\Debug\supersocket.exe
   supersocket.vcxproj -> C:\Users\Jin Lianyuan\documents\visual studio 2015\Projects\supersocket\Debug\supersocket.pdb (Full PDB)

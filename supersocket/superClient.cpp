@@ -155,6 +155,7 @@ DWORD CClient::SendDataThread(void* pParam)
 			phdr pHeader = (phdr)pClient->m_data.buf;
 			int nSendlen = pHeader->len;
 
+			OutputPackageInBinary(pClient->m_data.buf, nSendlen + 6);
 			int val = send(pClient->m_socket, pClient->m_data.buf, nSendlen+6, 0);
 			//处理返回错误
 			if (SOCKET_ERROR == val)
@@ -236,8 +237,7 @@ void CClient::HandleData(const char* pExpr)
 		sprintf(temp, "%lld", timep);
 		int len = strlen(temp);
 		pHeaderSend->len = len;
-		//m_data.buf[HEADERLEN] = 1;
-		//m_data.buf[HEADERLEN+1] = 0;
+
 		IntToChar(1, 0, m_data.buf + HEADERLEN);
 		memcpy(m_data.buf + HEADERLEN+2, temp, 6+len);	//复制数据到m_data"
 		LeaveCriticalSection(&m_cs);
@@ -316,15 +316,19 @@ void CClient::HandleData(const char* pExpr)
 			Sleep(TIMEFOR_THREAD_SLEEP);
 		}
 	}
-	else if (COMMUNICATION == ((phdr)pExpr)->type) {
-		EnterCriticalSection(&this->Super->csMessageQueue);
+	else if (SEND == ((phdr)pExpr)->type) {
 		Message res;
-		phdr pHeaderSend = (phdr)m_data.buf;
+		phdr pHeaderSend = (phdr)pExpr;
 
-		memcpy(res.pData.buf, m_data.buf, pHeaderSend->len + 6);
-		res.iDesID = m_data.buf[6];
+		std::cout << "数据包的长度是" << pHeaderSend->len + 6 << std::endl;
+		memcpy(res.pData.buf, pExpr, pHeaderSend->len + 6);
+		std::cout << "接收到send" << std::endl;
+		OutputPackageInBinary(pExpr, pHeaderSend->len + 6);
+		res.iDesID = pExpr[6];
+
+		EnterCriticalSection(&(this->Super->csMessageQueue));
 		this->Super->MessageQueue.push(res);
-		LeaveCriticalSection(&this->Super->csMessageQueue);
+		LeaveCriticalSection(&(this->Super->csMessageQueue));
 	}
 	
 	else{//算数表达式

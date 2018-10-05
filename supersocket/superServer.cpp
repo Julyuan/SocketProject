@@ -20,6 +20,8 @@ using namespace std;
 HANDLE superServer::hServerEvent = CreateEvent(NULL, TRUE, FALSE, NULL);	//手动设置事件，初始化为无信息号状态
 HANDLE superServer::hThreadAccept = NULL;									//设置为NULL
 HANDLE superServer::hThreadHelp = NULL;										//设置为NULL
+HANDLE superServer::hThreadDistributeMsg = NULL;
+
 SOCKET superServer::sServer = INVALID_SOCKET;								//设置为无效的套接字
 BOOL superServer::bServerRunning = FALSE;									//服务器为没有运行状态
 CLIENTLIST superServer::clientlist;
@@ -55,6 +57,8 @@ BOOL	superServer::InitSever(void)
 void	superServer::InitMember(void)
 {
 	InitializeCriticalSection(&csClientList);				//初始化临界区
+	InitializeCriticalSection(&csMessageQueue);
+	InitializeCriticalSection(&csClientTable);
 	clientlist.clear();										//清空链表
 }
 
@@ -235,6 +239,8 @@ BOOL  superServer::CreateHelperAndAcceptThread(void)
 
 	//创建接收客户端请求线程
 	hThreadAccept = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AcceptThread, this, 0, &ulThreadId);
+	
+	hThreadDistributeMsg = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)DistributeMessageThread, this, 0, &ulThreadId);
 	if (NULL == hThreadAccept)
 	{
 		bServerRunning = FALSE;
@@ -289,18 +295,26 @@ DWORD WINAPI superServer::DistributeMessageThread(LPVOID pParam) {
 	superServer* pServer = (superServer*)pParam;
 	for (; bServerRunning;) {
 		while (!pServer->MessageQueue.empty()) {
+			//std::cout << "1277777" << std::endl;
 			EnterCriticalSection(&csMessageQueue);
 			Message temp = pServer->MessageQueue.front();
+			std::cout << "temp:id = " << temp.iDesID << std::endl;
 			pServer->MessageQueue.pop();
-			CClient*des = pServer->mClientTable[temp.iDesID];
-			EnterCriticalSection(&des->m_cs);
-			phdr pHeaderSend = (phdr)temp.pData.buf;				//发送的数据		
-			
-			memcpy(des->m_data.buf, &temp.pData.buf, pHeaderSend->len + 6);	//复制数据到m_data"
-			LeaveCriticalSection(&des->m_cs);
-			SetEvent(des->m_hEvent);	//通知发送数据线程
-			LeaveCriticalSection(&csMessageQueue);
+	
+			if (pServer->mClientTable.find(temp.iDesID) == pServer->mClientTable.end()) {
+				std::cout << "该ID不存在" << std::endl;
+			}
+			else {
+				CClient*des = pServer->mClientTable[temp.iDesID];
 
+				EnterCriticalSection(&(des->m_cs));
+				phdr pHeaderSend = (phdr)temp.pData.buf;				//发送的数据		
+				memcpy(des->m_data.buf, temp.pData.buf, pHeaderSend->len + 6);	//复制数据到m_data"
+				LeaveCriticalSection(&des->m_cs);
+
+				SetEvent(des->m_hEvent);	//通知发送数据线程
+				LeaveCriticalSection(&csMessageQueue);
+			}
 			Sleep(TIMEFOR_THREAD_SLEEP);
 		}
 	}
@@ -367,6 +381,7 @@ DWORD WINAPI superServer::HelperThread(LPVOID pParam)
 			CClient *pClient = (CClient*)*iter;
 			if (pClient->IsExit())			//客户端线程已经退出
 			{
+				mClientTable.erase(pClient->m_iID);
 				clientlist.erase(iter++);	//删除节点
 				delete pClient;				//释放内存
 				pClient = NULL;
@@ -418,6 +433,7 @@ DWORD WINAPI superServer::HelperThread(LPVOID pParam)
 				CClient *pClient = (CClient*)*iter;
 				if (pClient->IsExit())			//客户端线程已经退出
 				{
+					mClientTable.erase(pClient->m_iID);
 					clientlist.erase(iter++);	//删除节点
 					delete pClient;				//释放内存空间
 					pClient = NULL;

@@ -20,7 +20,6 @@
 #define NAME				'N'				//获取名字
 #define LIST				'L'				//获取客户端列表
 #define SEND				'S'				//向其他客户端发送消息
-#define COMMUNICATION		'C'				//客户端之间通讯
 #define HEADERLEN			(sizeof(hdr))	//头长度
 
 //数据包头结构，该结构在win32下为4byte
@@ -47,7 +46,8 @@ public:
 	DATABUF		m_data;				//数据
 	CRITICAL_SECTION m_cs;			//临界区对象
 	HANDLE		m_hEvent;			//事件对象
-	
+	int			m_iID;
+
 	superServer* Super;
 	BOOL IntToChar(int total, int index, char* des);
 	BOOL ImformationEncapsulation(char* caTerm, char* cID, char* caIP, char* caPort) {
@@ -60,7 +60,7 @@ public:
 	BOOL		StartRuning(void);					//创建发送和接收数据线程
 	void		HandleData(const char* pExpr);		//计算表达式
 
-	void		OutputPackageInBinary(const char* src, int len);
+	static void		OutputPackageInBinary(const char* src, int len);
 	BOOL		IsConning(void) {					//是否连接存在
 		return m_bConning;
 	}
@@ -85,5 +85,4 @@ private:
 	HANDLE		m_hThreadRecv;		//接收数据线程句柄
 	BOOL		m_bConning;			//客户端连接状态
 	BOOL		m_bExit;			//线程退出
-	int			m_iID;
 };

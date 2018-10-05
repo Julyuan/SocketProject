@@ -26,6 +26,8 @@ public:
 	static std::queue<Message>MessageQueue;
 	static HANDLE	hThreadAccept;						//接受客户端连接线程句柄
 	static HANDLE	hThreadHelp;						//释放资源线程句柄
+	static HANDLE	hThreadDistributeMsg;
+
 	static SOCKET	sServer;							//监听套接字
 	static BOOL	bServerRunning;						//服务器的工作状态
 	static HANDLE	hServerEvent;						//关闭服务器事件对象
