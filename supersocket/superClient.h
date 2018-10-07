@@ -50,7 +50,7 @@ public:
 
 	superServer* Super;
 	BOOL IntToChar(int total, int index, char* des);
-	BOOL ImformationEncapsulation(char* caTerm, char* cID, char* caIP, char* caPort) {
+	static BOOL ImformationEncapsulation(char* caTerm, char* cID, char* caIP, char* caPort) {
 		memcpy(caTerm, cID,1);
 		memcpy(caTerm + 1, caIP, 4);
 		memcpy(caTerm + 5, caPort, 2);

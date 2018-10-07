@@ -111,7 +111,7 @@ DWORD  CClient::RecvDataThread(void* pParam)
 		if (reVal > HEADERLEN)
 		{
 		//	printf("130\n");
-			std::cout << "接受到客户端的数据" << std::endl;
+		//	std::cout << "接受到客户端的数据" << std::endl;
 
 			pClient->HandleData(temp);		//处理数据
 
@@ -140,7 +140,7 @@ DWORD CClient::SendDataThread(void* pParam)
 		//收到事件通知
 		if (WAIT_OBJECT_0 == WaitForSingleObject(pClient->m_hEvent, INFINITE))
 		{
-			std::cout << "向客户端发送数据" << std::endl;
+		//	std::cout << "向客户端发送数据" << std::endl;
 
 			//当客户端的连接断开时，接收数据线程先退出，然后该线程后退出，并设置退出标志
 			if (!pClient->m_bConning)
@@ -225,7 +225,7 @@ void CClient::HandleData(const char* pExpr)
 
 	}	
 	else if (TIME == ((phdr)pExpr)->type) {
-		std::cout << "客户端发送了获取时间的请求" << std::endl;
+	//	std::cout << "客户端发送了获取时间的请求" << std::endl;
 		time_t timep;
 		//struct tm *p;
 		time(&timep);
@@ -307,29 +307,66 @@ void CClient::HandleData(const char* pExpr)
 		for (auto iter : pac) {
 			EnterCriticalSection(&m_cs);
 			phdr pHeaderSend = (phdr)iter.buf;
-			std::cout << "len = " << pHeaderSend->len << std::endl;
+			//std::cout << "len = " << pHeaderSend->len << std::endl;
 
 			memcpy(m_data.buf, iter.buf, pHeaderSend->len+6);	//复制数据到m_data"
-			OutputPackageInBinary(m_data.buf + 6, 7);
+		//	OutputPackageInBinary(m_data.buf + 6, 7);
 			LeaveCriticalSection(&m_cs);
 			SetEvent(m_hEvent);	//通知发送数据线程
 			Sleep(TIMEFOR_THREAD_SLEEP);
 		}
 	}
 	else if (SEND == ((phdr)pExpr)->type) {
+	//	std::cout << "收到一个包" << std::endl;
 		Message res;
 		phdr pHeaderSend = (phdr)pExpr;
 
-		std::cout << "数据包的长度是" << pHeaderSend->len + 6 << std::endl;
+	//	std::cout << "数据包的长度是" << pHeaderSend->len + 6 << std::endl;
 		memcpy(res.pData.buf, pExpr, pHeaderSend->len + 6);
-		std::cout << "接收到send" << std::endl;
-		OutputPackageInBinary(pExpr, pHeaderSend->len + 6);
+	//	std::cout << "接收到send" << std::endl;
+	//	OutputPackageInBinary(pExpr, pHeaderSend->len + 6);
 		res.iDesID = pExpr[6];
 		res.pData.buf[6] = this->m_iID;
 
 		EnterCriticalSection(&(this->Super->csMessageQueue));
 		this->Super->MessageQueue.push(res);
 		LeaveCriticalSection(&(this->Super->csMessageQueue));
+
+		if (pExpr[4] - 1 == pExpr[5]) {
+
+			char caTempBuffer[MAX_NUM_BUF];
+			phdr pHeaderSend = (phdr)caTempBuffer;
+			memcpy(caTempBuffer, pExpr, 7);
+			pHeaderSend->len = 20;
+			caTempBuffer[5] += 1;
+			u_long ulIPNum = this->m_addr.sin_addr.S_un.S_addr;
+			int iPortNum = this->m_addr.sin_port;
+
+			char caTerm[7];
+			char caIP[4];
+			char cID;
+			char caPort[2];
+			char* buffer;
+			int a[4];
+			buffer = inet_ntoa(this->m_addr.sin_addr);
+			sscanf(buffer, "%d.%d.%d.%d", &a[0], &a[1], &a[2], &a[3]);
+			for (int i = 0; i<4; i++)
+				caIP[i] = (char)a[i];
+			caPort[0] = iPortNum % 256;
+			iPortNum /= 256;
+			caPort[1] = iPortNum;
+			cID = this->m_iID;
+
+			ImformationEncapsulation(caTerm, &cID, caIP, caPort);
+		//	OutputPackageInBinary(caTerm, 7);
+			memcpy(caTempBuffer + 7, caTerm, 7);
+			Message addr;
+			addr.iDesID = pExpr[6];
+			memcpy(addr.pData.buf, caTempBuffer, 27);
+			EnterCriticalSection(&(this->Super->csMessageQueue));
+			this->Super->MessageQueue.push(addr);
+			LeaveCriticalSection(&(this->Super->csMessageQueue));
+		}
 	}
 	
 	else{//算数表达式

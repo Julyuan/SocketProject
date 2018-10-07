@@ -295,28 +295,28 @@ DWORD WINAPI superServer::DistributeMessageThread(LPVOID pParam) {
 	superServer* pServer = (superServer*)pParam;
 	for (; bServerRunning;) {
 		while (!pServer->MessageQueue.empty()) {
-			//std::cout << "1277777" << std::endl;
 			EnterCriticalSection(&csMessageQueue);
 			Message temp = pServer->MessageQueue.front();
-			std::cout << "temp:id = " << temp.iDesID << std::endl;
+	//		std::cout << "temp:id = " << temp.iDesID << std::endl;
 			pServer->MessageQueue.pop();
 	
 			if (pServer->mClientTable.find(temp.iDesID) == pServer->mClientTable.end()) {
 				std::cout << "该ID不存在" << std::endl;
 			}
 			else {
-				std::cout << "开始转运数据" << std::endl;
+			//	std::cout << "开始转运数据" << std::endl;
 				CClient*des = pServer->mClientTable[temp.iDesID];
 
 				EnterCriticalSection(&(des->m_cs));
 				phdr pHeaderSend = (phdr)temp.pData.buf;				//发送的数据		
 				memcpy(des->m_data.buf, temp.pData.buf, pHeaderSend->len + 6);	//复制数据到m_data"
+				des->m_data.buf[4] += 1;
 				LeaveCriticalSection(&des->m_cs);
 
 				SetEvent(des->m_hEvent);	//通知发送数据线程
 				LeaveCriticalSection(&csMessageQueue);
+				Sleep(TIMEFOR_THREAD_SLEEP);
 			}
-			Sleep(TIMEFOR_THREAD_SLEEP);
 		}
 	}
 	return 0;
@@ -382,6 +382,7 @@ DWORD WINAPI superServer::HelperThread(LPVOID pParam)
 			CClient *pClient = (CClient*)*iter;
 			if (pClient->IsExit())			//客户端线程已经退出
 			{
+			//	std::cout << "开始删除" << std::endl;
 				mClientTable.erase(pClient->m_iID);
 				clientlist.erase(iter++);	//删除节点
 				delete pClient;				//释放内存
@@ -434,7 +435,9 @@ DWORD WINAPI superServer::HelperThread(LPVOID pParam)
 				CClient *pClient = (CClient*)*iter;
 				if (pClient->IsExit())			//客户端线程已经退出
 				{
-					mClientTable.erase(pClient->m_iID);
+					auto iterator = mClientTable.find(pClient->m_iID);
+					if(iterator != mClientTable.end())
+						mClientTable.erase(iterator);
 					clientlist.erase(iter++);	//删除节点
 					delete pClient;				//释放内存空间
 					pClient = NULL;
