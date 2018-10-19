@@ -140,7 +140,6 @@ DWORD CClient::SendDataThread(void* pParam)
 		//收到事件通知
 		if (WAIT_OBJECT_0 == WaitForSingleObject(pClient->m_hEvent, INFINITE))
 		{
-		//	std::cout << "向客户端发送数据" << std::endl;
 
 			//当客户端的连接断开时，接收数据线程先退出，然后该线程后退出，并设置退出标志
 			if (!pClient->m_bConning)
@@ -151,11 +150,13 @@ DWORD CClient::SendDataThread(void* pParam)
 
 			//进入临界区
 			EnterCriticalSection(&pClient->m_cs);
+
 			//发送数据
 			phdr pHeader = (phdr)pClient->m_data.buf;
 			int nSendlen = pHeader->len;
+			std::cout << "向客户端发送数据,类型是" << (char)(pHeader->type)<< std::endl;
 
-			OutputPackageInBinary(pClient->m_data.buf, nSendlen + 6);
+		//	OutputPackageInBinary(pClient->m_data.buf, nSendlen + 6);
 			int val = send(pClient->m_socket, pClient->m_data.buf, nSendlen+6, 0);
 			//处理返回错误
 			if (SOCKET_ERROR == val)
@@ -244,9 +245,10 @@ void CClient::HandleData(const char* pExpr)
 		SetEvent(m_hEvent);	//通知发送数据线程
 
 	}
+
+
 	else if (NAME == ((phdr)pExpr)->type) {
 		char temp[] = "DESKTOP-8F8T";
-		printf("1 temp = %s, len = %d\n", temp, strlen(temp));
 
 		int len = strlen(temp);
 		EnterCriticalSection(&m_cs);
@@ -255,11 +257,14 @@ void CClient::HandleData(const char* pExpr)
 		pHeaderSend->len =len;
 		IntToChar(1, 0, m_data.buf + HEADERLEN);
 
-		printf("2 temp = %s, len = %d\n", temp, len);
 		memcpy(m_data.buf + HEADERLEN+2, temp,len);
 		LeaveCriticalSection(&m_cs);
 		SetEvent(m_hEvent);
 	}
+
+
+
+
 	else if (LIST == ((phdr)pExpr)->type){
 		std::vector<DATABUF> pac;
 		int count = 0;
@@ -307,7 +312,6 @@ void CClient::HandleData(const char* pExpr)
 		for (auto iter : pac) {
 			EnterCriticalSection(&m_cs);
 			phdr pHeaderSend = (phdr)iter.buf;
-			//std::cout << "len = " << pHeaderSend->len << std::endl;
 
 			memcpy(m_data.buf, iter.buf, pHeaderSend->len+6);	//复制数据到m_data"
 		//	OutputPackageInBinary(m_data.buf + 6, 7);
@@ -320,11 +324,13 @@ void CClient::HandleData(const char* pExpr)
 	//	std::cout << "收到一个包" << std::endl;
 		Message res;
 		phdr pHeaderSend = (phdr)pExpr;
-
+		
 	//	std::cout << "数据包的长度是" << pHeaderSend->len + 6 << std::endl;
 		memcpy(res.pData.buf, pExpr, pHeaderSend->len + 6);
 	//	std::cout << "接收到send" << std::endl;
 	//	OutputPackageInBinary(pExpr, pHeaderSend->len + 6);
+	//	std::cout << "客户端的id" << this->m_iID << std::endl;
+		res.iSrcID = this->m_iID;
 		res.iDesID = pExpr[6];
 		res.pData.buf[6] = this->m_iID;
 
@@ -361,6 +367,7 @@ void CClient::HandleData(const char* pExpr)
 		//	OutputPackageInBinary(caTerm, 7);
 			memcpy(caTempBuffer + 7, caTerm, 7);
 			Message addr;
+			addr.iSrcID = -1;
 			addr.iDesID = pExpr[6];
 			memcpy(addr.pData.buf, caTempBuffer, 27);
 			EnterCriticalSection(&(this->Super->csMessageQueue));
@@ -450,6 +457,34 @@ BOOL CClient::IntToChar(int total, int index, char * des)
 	des[0] = (char)total;
 	des[1] = (char)index;
 	return TRUE;
+}
+
+BOOL CClient::SendResponse(int mode)
+{
+	std::cout << "准备发送反馈消息" << std::endl;
+	//Sleep(1000);
+	EnterCriticalSection(&m_cs);
+
+	if (mode == 0) {
+		phdr pHeader = (phdr)&m_data.buf;
+		pHeader->type = RESPONSE;
+		pHeader->len = 1;
+		m_data.buf[4] = 1;
+		m_data.buf[5] = 0;
+		m_data.buf[6] = 1;
+	}
+	else if (mode == 1) {
+		phdr pHeader = (phdr)&m_data.buf;
+		pHeader->type = RESPONSE;
+		pHeader->len = 1;
+		m_data.buf[4] = 1;
+		m_data.buf[5] = 0;
+		m_data.buf[6] = 2;
+	}
+	LeaveCriticalSection(&m_cs);
+	SetEvent(m_hEvent);
+
+	return 0;
 }
 
 std::vector<DATABUF> CClient::DataConvert(char * str, int type)

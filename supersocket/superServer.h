@@ -17,6 +17,7 @@
 typedef std::list <CClient*> CLIENTLIST;			//Á´±í
 
 struct Message {
+	int iSrcID;
 	int iDesID;
 	DATABUF pData;
 };

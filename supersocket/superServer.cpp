@@ -296,15 +296,18 @@ DWORD WINAPI superServer::DistributeMessageThread(LPVOID pParam) {
 	for (; bServerRunning;) {
 		while (!pServer->MessageQueue.empty()) {
 			EnterCriticalSection(&csMessageQueue);
+			std::cout << "队列大小为" << pServer->MessageQueue.size() << std::endl;
 			Message temp = pServer->MessageQueue.front();
-	//		std::cout << "temp:id = " << temp.iDesID << std::endl;
+			//std::cout << "temp:id = " << temp.iDesID << "temp:srcid = "<<temp.iSrcID<<std::endl;
 			pServer->MessageQueue.pop();
 	
 			if (pServer->mClientTable.find(temp.iDesID) == pServer->mClientTable.end()) {
-				std::cout << "该ID不存在" << std::endl;
+				//std::cout << "该ID不存在" << std::endl;
+			//	if(temp.iSrcID!=-1)
+			//		(pServer->mClientTable[temp.iSrcID])->SendResponse(0);
 			}
 			else {
-			//	std::cout << "开始转运数据" << std::endl;
+				//std::cout << "开始转运数据" << std::endl;
 				CClient*des = pServer->mClientTable[temp.iDesID];
 
 				EnterCriticalSection(&(des->m_cs));
@@ -316,6 +319,11 @@ DWORD WINAPI superServer::DistributeMessageThread(LPVOID pParam) {
 				SetEvent(des->m_hEvent);	//通知发送数据线程
 				LeaveCriticalSection(&csMessageQueue);
 				Sleep(TIMEFOR_THREAD_SLEEP);
+
+				//std::cout << "ID = " << temp.iSrcID << std::endl;
+				//if(temp.iSrcID!=-1)
+				//	(pServer->mClientTable[temp.iSrcID])->SendResponse(1);
+
 			}
 		}
 	}
@@ -351,7 +359,7 @@ DWORD WINAPI superServer::AcceptThread(LPVOID pParam)
 		}
 		else//接受客户端的请求
 		{
-
+			printf("客户端连接成功,ip地址是%s\n", inet_ntoa(addrClient.sin_addr));
 			CClient *pClient = new CClient(sAccept, addrClient, super, iCount++);	//创建客户端对象	
 			mClientTable.insert(std::pair<int, CClient*>(iCount - 1, pClient));		
 			EnterCriticalSection(&csClientList);				//进入在临界区
@@ -383,7 +391,8 @@ DWORD WINAPI superServer::HelperThread(LPVOID pParam)
 			if (pClient->IsExit())			//客户端线程已经退出
 			{
 			//	std::cout << "开始删除" << std::endl;
-				mClientTable.erase(pClient->m_iID);
+				auto temp = mClientTable.find(pClient->m_iID);
+				mClientTable.erase(temp);
 				clientlist.erase(iter++);	//删除节点
 				delete pClient;				//释放内存
 				pClient = NULL;

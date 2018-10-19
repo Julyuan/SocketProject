@@ -20,6 +20,7 @@
 #define NAME				'N'				//获取名字
 #define LIST				'L'				//获取客户端列表
 #define SEND				'S'				//向其他客户端发送消息
+#define RESPONSE			'R'				//响应
 #define HEADERLEN			(sizeof(hdr))	//头长度
 
 //数据包头结构，该结构在win32下为4byte
@@ -50,6 +51,7 @@ public:
 
 	superServer* Super;
 	BOOL IntToChar(int total, int index, char* des);
+	BOOL SendResponse(int mode);
 	static BOOL ImformationEncapsulation(char* caTerm, char* cID, char* caIP, char* caPort) {
 		memcpy(caTerm, cID,1);
 		memcpy(caTerm + 1, caIP, 4);
